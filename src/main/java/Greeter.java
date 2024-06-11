@@ -2,10 +2,10 @@ import java.time.LocalDate;
 
 public class Greeter {
     private final FriendRepository repository;
-    private final INotifier notifier;
+    private final Notifier notifier;
     private final Calendar calendar;
 
-    public Greeter(FriendRepository repository, INotifier notifier, Calendar calendar) {
+    public Greeter(FriendRepository repository, Notifier notifier, Calendar calendar) {
         if (repository == null) throw new IllegalArgumentException("Repository can't be null");
         if (notifier == null) throw new IllegalArgumentException("Notifier can't be null");
         if (calendar == null) throw new IllegalArgumentException("Calendar can't be null");
