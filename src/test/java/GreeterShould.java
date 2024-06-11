@@ -1,8 +1,11 @@
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.BDDMockito.given;
 
 public class GreeterShould {
     @Test
@@ -11,11 +14,11 @@ public class GreeterShould {
         LocalDate birthday = today.plusDays(1);
         String name = "Rafa";
         Friend friend = new Friend(name, birthday);
-        var repository = new StubPersonRepository();
-        repository.addFriend(friend);
+        var stubRepository = Mockito.mock(FriendRepository.class);
+        given(stubRepository.getFriends()).willReturn(List.of(friend));
         var notifier = new NotifierSpy();
         var calendar = new StubCalendar(today);
-        Greeter sut = new Greeter(repository, notifier, calendar);
+        Greeter sut = new Greeter(stubRepository, notifier, calendar);
 
         sut.greet();
 
@@ -28,11 +31,11 @@ public class GreeterShould {
         LocalDate birthday = anyToday;
         String name = "Rafa";
         Friend friend = new Friend(name, birthday);
-        var repository = new StubPersonRepository();
-        repository.addFriend(friend);
+        var stubRepository = Mockito.mock(FriendRepository.class);
+        given(stubRepository.getFriends()).willReturn(List.of(friend));
         var notifier = new NotifierSpy();
         var calendar = new StubCalendar(anyToday);
-        Greeter sut = new Greeter(repository, notifier, calendar);
+        Greeter sut = new Greeter(stubRepository, notifier, calendar);
 
         sut.greet();
 
@@ -46,12 +49,11 @@ public class GreeterShould {
         Friend friend1 = new Friend(name1, today);
         String name2 = "B";
         Friend friend2 = new Friend(name2, today);
-        var repository = new StubPersonRepository();
-        repository.addFriend(friend1);
-        repository.addFriend(friend2);
+        var stubRepository = Mockito.mock(FriendRepository.class);
+        given(stubRepository.getFriends()).willReturn(List.of(friend1, friend2));
         var notifier = new NotifierSpy();
         var calendar = new StubCalendar(today);
-        Greeter sut = new Greeter(repository, notifier, calendar);
+        Greeter sut = new Greeter(stubRepository, notifier, calendar);
 
         sut.greet();
 
@@ -62,10 +64,10 @@ public class GreeterShould {
     @Test
     public void send_none_notification_when_no_friends() {
         LocalDate today = LocalDate.of(2003, 6, 12);
-        var repository = new StubPersonRepository();
+        var stubRepository = Mockito.mock(FriendRepository.class);
         var notifier = new NotifierSpy();
         var calendar = new StubCalendar(today);
-        Greeter sut = new Greeter(repository, notifier, calendar);
+        Greeter sut = new Greeter(stubRepository, notifier, calendar);
 
         sut.greet();
 
